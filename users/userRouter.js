@@ -31,9 +31,16 @@ router.get('/:id/posts', validateUserId, (req, res) => {
     })
 });
 
-router.delete('/:id', (req, res) => {
-
-    
+router.delete('/:id', validateUserId, (req, res) => {
+    db.remove(req.user.id)
+    .then(post => {
+        res.status(200).json(post)
+    })
+    .catch(error => {
+        res.status(500).json({
+            message: "An error occured!"
+        })
+    })
 });
 
 router.put('/:id', (req, res) => {
