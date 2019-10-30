@@ -43,8 +43,16 @@ router.delete('/:id', validateUserId, (req, res) => {
     })
 });
 
-router.put('/:id', (req, res) => {
-    
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+    db.update(req.user.id, req.body)
+        .then(userName => {
+            res.status(200).json(userName)
+        })
+        .catch(error => {
+            res.status(400).json({
+                message: "missing required name field"
+            })
+        })
 });
 
 //custom middleware
