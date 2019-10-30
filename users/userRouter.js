@@ -44,7 +44,7 @@ router.delete('/:id', validateUserId, (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-
+    
 });
 
 //custom middleware
@@ -66,7 +66,13 @@ function validateUserId(req, res, next) {
 };
 
 function validateUser(req, res, next) {
-
+    if (Object.keys(req.body).length) {
+        next()
+    } else {
+        res.status(400).json({
+            message: "missing user data"
+        })
+    }
 };
 
 function validatePost(req, res, next) {
