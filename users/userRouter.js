@@ -15,8 +15,16 @@ router.get('/', (req, res) => {
 
 });
 
-router.get('/:id', (req, res) => {
-
+router.get('/:id', validateUserId, (req, res) => {
+    db.getById(req.user.id)
+        .then(user => {
+            res.status(200).json(user)
+        })
+        .catch(error => {
+            res.status(500).json({
+                message: "An error occured!"
+            })
+        })
 });
 
 router.get('/:id/posts', validateUserId, (req, res) => {
