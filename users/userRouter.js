@@ -33,6 +33,7 @@ router.get('/:id/posts', validateUserId, (req, res) => {
 
 router.delete('/:id', (req, res) => {
 
+    
 });
 
 router.put('/:id', (req, res) => {
