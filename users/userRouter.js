@@ -8,7 +8,15 @@ router.post('/', (req, res) => {
 });
 
 router.post('/:id/posts', validateUserId, (req, res) => {
-
+    db.getUserPosts(req.user.id)
+        .then(post => {
+            res.status(200).json(post)
+        })
+        .catch(err => {
+            res.status(500).json({
+                message: "An error occured!"
+            })
+        })
 });
 
 router.get('/', (req, res) => {
@@ -100,7 +108,13 @@ function validateUser(req, res, next) {
 };
 
 function validatePost(req, res, next) {
-
+    if (Object.keys(req.body).length) {
+        next()
+    } else {
+        res.status(400).json({
+            message: "missing post data"
+        })
+    }
 };
 
 module.exports = router;
