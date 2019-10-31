@@ -1,22 +1,27 @@
 const express = require('express');
 const db = require('./userDb')
+const postDb = require('../posts/postDb')
 
 const router = express.Router();
 
-router.post('/', validatePost, (req, res) => {
+router.post('/', validateUser, (req, res) => {
     db.insert(req.body)
         .then(post => {
             res.status(201).json(post)
         })
         .catch(err => {
             res.status(500).json({
-                message: "An error occured!"
+                message: `An error occured: ${err.message}`
             })
         })
 });
 
-router.post('/:id/posts', validateUserId, (req, res) => {
-    db.getUserPosts(req.user.id)
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+    const postObject = {
+        text: req.body.text,
+        user_id: req.body.user_id
+    }
+    postDb.insert(postObject)
         .then(post => {
             res.status(201).json(post)
         })
@@ -123,7 +128,7 @@ function validateUser(req, res, next) {
 
 function validatePost(req, res, next) {
     if (Object.keys(req.body).length) {
-        if (req.body.text) {
+        if (req.body.text && req.body.user_id) {
             next()
         } else {
             res.status(400).json({
